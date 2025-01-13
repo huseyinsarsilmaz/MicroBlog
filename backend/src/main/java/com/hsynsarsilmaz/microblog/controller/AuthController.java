@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hsynsarsilmaz.microblog.dto.ApiResponse;
 import com.hsynsarsilmaz.microblog.dto.LoginRequest;
+import com.hsynsarsilmaz.microblog.dto.RegisterRequest;
+import com.hsynsarsilmaz.microblog.dto.RegisterResponse;
+import com.hsynsarsilmaz.microblog.entity.User;
 import com.hsynsarsilmaz.microblog.security.JwtService;
+import com.hsynsarsilmaz.microblog.service.UserService;
 import com.hsynsarsilmaz.microblog.service.Utils;
 
 import jakarta.validation.Valid;
@@ -26,11 +30,14 @@ public class AuthController {
 
     private JwtService jwtService;
 
+    private UserService userService;
+
     public AuthController(MessageSource messageSource, AuthenticationManager authenticationManager,
-            JwtService jwtService) {
+            JwtService jwtService, UserService userService) {
         this.messageSource = messageSource;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.userService = userService;
     }
 
     private String getJwtToken(LoginRequest req) {
@@ -46,6 +53,15 @@ public class AuthController {
         String message = messageSource.getMessage("user.login.successful", null, Locale.getDefault());
 
         return Utils.successResponse(message, token, HttpStatus.OK);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse> addUser(@Valid @RequestBody RegisterRequest req) {
+        userService.isUsernameTaken(req.getUsername());
+
+        User savedUser = userService.registerUser(req);
+        String message = messageSource.getMessage("user.register.sucessful", null, Locale.getDefault());
+        return Utils.successResponse(message, new RegisterResponse(savedUser), HttpStatus.CREATED);
     }
 
 }
