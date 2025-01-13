@@ -1,10 +1,40 @@
-import React from "react";
-import { Box, TextField, Button, Typography } from "@mui/material";
+import React, { useState } from "react";
+import axios from "axios";
+import { Box, TextField, Button, Typography, Alert } from "@mui/material";
+import logo from "../assets/logo.png"; 
 
 const Register = () => {
-  const handleSubmit = (event) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle registration logic
+    setMessage(null);
+    setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match!");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:8080/register", {
+        username,
+        password,
+      });
+
+      setMessage("Registration successful!");
+      setUsername("");
+      setPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      setError(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
+    }
   };
 
   return (
@@ -27,9 +57,18 @@ const Register = () => {
           boxShadow: "0px 4px 10px rgba(0,0,0,0.5)",
         }}
       >
+        <Box sx={{ textAlign: "center", marginBottom: 2 }}>
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ width: "100px", height: "auto" }}
+          />
+        </Box>
         <Typography variant="h5" component="h1" textAlign="center" gutterBottom>
           Register
         </Typography>
+        {message && <Alert severity="success">{message}</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
@@ -37,6 +76,8 @@ const Register = () => {
             label="Username"
             variant="outlined"
             required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             InputLabelProps={{ style: { color: "#888" } }}
             InputProps={{
               style: {
@@ -52,6 +93,8 @@ const Register = () => {
             type="password"
             variant="outlined"
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             InputLabelProps={{ style: { color: "#888" } }}
             InputProps={{
               style: {
@@ -67,6 +110,8 @@ const Register = () => {
             type="password"
             variant="outlined"
             required
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             InputLabelProps={{ style: { color: "#888" } }}
             InputProps={{
               style: {
