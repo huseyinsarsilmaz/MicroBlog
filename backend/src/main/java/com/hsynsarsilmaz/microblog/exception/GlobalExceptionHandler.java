@@ -20,7 +20,7 @@ import com.hsynsarsilmaz.microblog.service.Utils;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    MessageSource messageSource;
+    final MessageSource messageSource;
 
     public GlobalExceptionHandler(MessageSource messageSource) {
         this.messageSource = messageSource;

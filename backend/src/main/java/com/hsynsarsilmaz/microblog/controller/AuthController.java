@@ -24,13 +24,13 @@ import jakarta.validation.Valid;
 
 @RestController
 public class AuthController {
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
-    private UserService userService;
+    private final UserService userService;
 
     public AuthController(MessageSource messageSource, AuthenticationManager authenticationManager,
             JwtService jwtService, UserService userService) {
@@ -60,7 +60,7 @@ public class AuthController {
         userService.isUsernameTaken(req.getUsername());
 
         User savedUser = userService.registerUser(req);
-        String message = messageSource.getMessage("user.register.sucessful", null, Locale.getDefault());
+        String message = messageSource.getMessage("user.register.successful", null, Locale.getDefault());
         return Utils.successResponse(message, new RegisterResponse(savedUser), HttpStatus.CREATED);
     }
 

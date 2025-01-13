@@ -14,7 +14,7 @@ import com.hsynsarsilmaz.microblog.repository.UserRepository;
 @Service
 public class UserAuthService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserAuthService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -23,7 +23,7 @@ public class UserAuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optUser = userRepository.findByUsername(username);
-        if (!optUser.isPresent()) {
+        if (optUser.isEmpty()) {
             throw new UserNotFoundException();
         }
 

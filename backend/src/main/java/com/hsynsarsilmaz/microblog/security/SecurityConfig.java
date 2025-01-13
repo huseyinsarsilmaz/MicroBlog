@@ -9,12 +9,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hsynsarsilmaz.microblog.dto.ApiResponse;
 
@@ -26,16 +25,14 @@ import jakarta.servlet.http.HttpServletResponse;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private JwtAuthFilter authFilter;
-    PasswordEncoder passwordEncoder;
+        private final JwtAuthFilter authFilter;
 
-    public SecurityConfig(JwtAuthFilter authFilter, PasswordEncoder passwordEncoder) {
-        this.authFilter = authFilter;
-        this.passwordEncoder = passwordEncoder;
+        public SecurityConfig(JwtAuthFilter authFilter) {
+                this.authFilter = authFilter;
     }
 
     private void handleExceptionInFilterChain(HttpServletRequest request, HttpServletResponse response,
-            RuntimeException exception, int responseCode) throws JsonProcessingException, IOException {
+                    RuntimeException exception, int responseCode) throws IOException {
         ApiResponse apiResponse = new ApiResponse(false,
                 "Unauthorized: " + exception.getMessage(), null);
         response.setStatus(responseCode);
@@ -46,7 +43,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                        .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/login").permitAll()
                         .anyRequest()
@@ -55,14 +52,14 @@ public class SecurityConfig {
                         .sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            handleExceptionInFilterChain(request, response, authException,
-                                    HttpServletResponse.SC_UNAUTHORIZED);
-                        })
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            handleExceptionInFilterChain(request, response, accessDeniedException,
-                                    HttpServletResponse.SC_FORBIDDEN);
-                        }))
+                                        .authenticationEntryPoint((request, response,
+                                                        authException) -> handleExceptionInFilterChain(request,
+                                                                        response, authException,
+                                                                        HttpServletResponse.SC_UNAUTHORIZED))
+                                        .accessDeniedHandler((request, response,
+                                                        accessDeniedException) -> handleExceptionInFilterChain(request,
+                                                                        response, accessDeniedException,
+                                                                        HttpServletResponse.SC_FORBIDDEN)))
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
