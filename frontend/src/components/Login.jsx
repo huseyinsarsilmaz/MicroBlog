@@ -4,7 +4,7 @@ import { Box, TextField, Button, Typography } from "@mui/material";
 const Login = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle login logic
+    
   };
 
   return (
@@ -14,7 +14,7 @@ const Login = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#121212", // Dark background
+        backgroundColor: "#121212", 
         color: "#ffffff",
       }}
     >
@@ -23,7 +23,7 @@ const Login = () => {
           width: 300,
           padding: 3,
           borderRadius: 2,
-          backgroundColor: "#1e1e1e", // Slightly lighter dark background for the form
+          backgroundColor: "#1e1e1e", 
           boxShadow: "0px 4px 10px rgba(0,0,0,0.5)",
         }}
       >
