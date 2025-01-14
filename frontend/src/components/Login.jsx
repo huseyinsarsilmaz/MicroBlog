@@ -1,10 +1,34 @@
-import React from "react";
-import { Box, TextField, Button, Typography } from "@mui/material";
+import React, { useState } from "react";
+import axios from "axios";
+import { Box, TextField, Button, Typography, Alert } from "@mui/material";
+import logo from "../assets/logo.png"; // Ensure the logo.png is placed in src/assets/
 
 const Login = () => {
-  const handleSubmit = (event) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleLogin = async (event) => {
     event.preventDefault();
-    
+    setMessage(null);
+    setError(null);
+
+    try {
+      const response = await axios.post("http://localhost:8080/login", {
+        username,
+        password,
+      });
+
+      // Handle successful login
+      setMessage("Login successful!");
+      setUsername("");
+      setPassword("");
+    } catch (error) {
+      setError(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
+    }
   };
 
   return (
@@ -14,7 +38,7 @@ const Login = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#121212", 
+        backgroundColor: "#121212", // Dark background
         color: "#ffffff",
       }}
     >
@@ -23,20 +47,31 @@ const Login = () => {
           width: 300,
           padding: 3,
           borderRadius: 2,
-          backgroundColor: "#1e1e1e", 
+          backgroundColor: "#1e1e1e", // Slightly lighter dark background for the form
           boxShadow: "0px 4px 10px rgba(0,0,0,0.5)",
         }}
       >
+        <Box sx={{ textAlign: "center", marginBottom: 2 }}>
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ width: "100px", height: "auto" }}
+          />
+        </Box>
         <Typography variant="h5" component="h1" textAlign="center" gutterBottom>
           Login
         </Typography>
-        <form onSubmit={handleSubmit}>
+        {message && <Alert severity="success">{message}</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
+        <form onSubmit={handleLogin}>
           <TextField
             fullWidth
             margin="normal"
             label="Username"
             variant="outlined"
             required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             InputLabelProps={{ style: { color: "#888" } }}
             InputProps={{
               style: {
@@ -52,6 +87,8 @@ const Login = () => {
             type="password"
             variant="outlined"
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             InputLabelProps={{ style: { color: "#888" } }}
             InputProps={{
               style: {
