@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class RegisterResponse {
+public class UserProfile {
     private String username;
 
-    public RegisterResponse(User user) {
-        username = user.getUsername();
+    public UserProfile(User user) {
+        this.username = user.getUsername();
     }
 
 }

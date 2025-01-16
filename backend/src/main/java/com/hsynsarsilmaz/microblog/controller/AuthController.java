@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hsynsarsilmaz.microblog.dto.ApiResponse;
 import com.hsynsarsilmaz.microblog.dto.LoginRequest;
+import com.hsynsarsilmaz.microblog.dto.LoginResponse;
 import com.hsynsarsilmaz.microblog.dto.RegisterRequest;
 import com.hsynsarsilmaz.microblog.dto.RegisterResponse;
 import com.hsynsarsilmaz.microblog.entity.User;
@@ -54,7 +55,7 @@ public class AuthController {
         String token = getJwtToken(req);
         String message = messageSource.getMessage("user.login.successful", null, Locale.getDefault());
 
-        return Utils.successResponse(message, token, HttpStatus.OK);
+        return Utils.successResponse(message, new LoginResponse(req.getUsername(), token), HttpStatus.OK);
     }
 
     @PostMapping("/register")
