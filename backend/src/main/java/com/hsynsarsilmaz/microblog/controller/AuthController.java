@@ -55,7 +55,7 @@ public class AuthController {
         String token = getJwtToken(req);
         String message = messageSource.getMessage("user.login.successful", null, Locale.getDefault());
 
-        return Utils.successResponse(message, new LoginResponse(req.getUsername(), token), HttpStatus.OK);
+        return Utils.successResponse(message, new LoginResponse(token), HttpStatus.OK);
     }
 
     @PostMapping("/register")

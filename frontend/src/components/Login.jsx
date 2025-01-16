@@ -1,33 +1,41 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Box, TextField, Button, Typography, Alert } from "@mui/material";
-import logo from "../assets/logo.png"; // Ensure the logo.png is placed in src/assets/
+import { Box, TextField, Button, Typography, Snackbar } from "@mui/material";
+import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(null);
-  const [error, setError] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    setMessage(null);
-    setError(null);
+    setSnackbarMessage(""); // Reset previous message
 
     try {
       const response = await axios.post("http://localhost:8080/api/login", {
         username,
         password,
       });
+      console.log(response);
 
-      // Handle successful login
-      setMessage("Login successful!");
-      setUsername("");
-      setPassword("");
+      localStorage.setItem("token", response.data.data.token);
+      localStorage.setItem("username", username);
+
+      setSnackbarMessage("Login successful! Redirecting to profile...");
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        navigate(`/profile/${username}`);
+      }, 1500); // Redirect after a short delay to show the success message
     } catch (error) {
-      setError(
-        error.response?.data?.message || "An error occurred. Please try again."
-      );
+      setSnackbarMessage("Login failed. Please try again.");
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        navigate("/login"); // Redirect to login page after an error
+      }, 1500);
     }
   };
 
@@ -38,7 +46,7 @@ const Login = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#121212", // Dark background
+        backgroundColor: "#121212",
         color: "#ffffff",
       }}
     >
@@ -47,7 +55,7 @@ const Login = () => {
           width: 300,
           padding: 3,
           borderRadius: 2,
-          backgroundColor: "#1e1e1e", // Slightly lighter dark background for the form
+          backgroundColor: "#1e1e1e",
           boxShadow: "0px 4px 10px rgba(0,0,0,0.5)",
         }}
       >
@@ -61,8 +69,7 @@ const Login = () => {
         <Typography variant="h5" component="h1" textAlign="center" gutterBottom>
           Login
         </Typography>
-        {message && <Alert severity="success">{message}</Alert>}
-        {error && <Alert severity="error">{error}</Alert>}
+
         <form onSubmit={handleLogin}>
           <TextField
             fullWidth
@@ -113,6 +120,14 @@ const Login = () => {
           </Button>
         </form>
       </Box>
+
+      {/* Snackbar for login feedback */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        message={snackbarMessage}
+      />
     </Box>
   );
 };
