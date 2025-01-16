@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hsynsarsilmaz.microblog.dto.ApiResponse;
@@ -23,6 +24,7 @@ import com.hsynsarsilmaz.microblog.service.Utils;
 import jakarta.validation.Valid;
 
 @RestController
+@RequestMapping("/api")
 public class AuthController {
     private final MessageSource messageSource;
 
