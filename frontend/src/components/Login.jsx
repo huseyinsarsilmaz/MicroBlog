@@ -13,8 +13,7 @@ const Login = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    setSnackbarMessage(""); // Reset previous message
-
+    setSnackbarMessage("");
     try {
       const response = await axios.post("http://localhost:8080/api/login", {
         username,
@@ -29,12 +28,12 @@ const Login = () => {
       setOpenSnackbar(true);
       setTimeout(() => {
         navigate(`/profile/${username}`);
-      }, 1500); // Redirect after a short delay to show the success message
+      }, 1500);
     } catch (error) {
       setSnackbarMessage("Login failed. Please try again.");
       setOpenSnackbar(true);
       setTimeout(() => {
-        navigate("/login"); // Redirect to login page after an error
+        navigate("/login");
       }, 1500);
     }
   };
@@ -79,14 +78,25 @@ const Login = () => {
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            InputLabelProps={{ style: { color: "#888" } }}
-            InputProps={{
-              style: {
+            slotProps={{
+              inputLabel: {
+                sx: { color: "#888" },
+              },
+            }}
+            sx={{
+              input: {
                 color: "#fff",
                 backgroundColor: "#333",
+                "&:-webkit-autofill": {
+                  color: "#fff",
+                  backgroundColor: "#333 !important",
+                  transition: "background-color 5000s",
+                  "-webkit-text-fill-color": "#fff !important",
+                },
               },
             }}
           />
+
           <TextField
             fullWidth
             margin="normal"
@@ -96,14 +106,25 @@ const Login = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            InputLabelProps={{ style: { color: "#888" } }}
-            InputProps={{
-              style: {
+            slotProps={{
+              inputLabel: {
+                sx: { color: "#888" },
+              },
+            }}
+            sx={{
+              input: {
                 color: "#fff",
                 backgroundColor: "#333",
+                "&:-webkit-autofill": {
+                  color: "#fff",
+                  backgroundColor: "#333 !important",
+                  transition: "background-color 5000s",
+                  "-webkit-text-fill-color": "#fff !important",
+                },
               },
             }}
           />
+
           <Button
             fullWidth
             variant="contained"

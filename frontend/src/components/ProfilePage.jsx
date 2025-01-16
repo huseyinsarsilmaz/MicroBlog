@@ -4,14 +4,14 @@ import { Box, Typography, Alert, CircularProgress, Button } from "@mui/material"
 import { useParams } from "react-router-dom"; 
 
 const ProfilePage = () => {
-  const { username } = useParams();  // Get the username from the URL parameter
+  const { username } = useParams();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+      const token = localStorage.getItem("token");
 
       if (!token) {
         setError("You must be logged in to view this page.");
@@ -20,12 +20,15 @@ const ProfilePage = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:8080/api/users/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Send the token in the Authorization header
-          },
-        });
-        setUser(response.data.data);  // Set user data from the response
+        const response = await axios.get(
+          `http://localhost:8080/api/users/${username}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setUser(response.data.data);
       } catch (err) {
         setError("User profile could not be fetched.");
       } finally {
@@ -34,7 +37,7 @@ const ProfilePage = () => {
     };
 
     fetchUserProfile();
-  }, [username]); // Re-fetch the profile if the username changes
+  }, [username]); 
 
   if (loading) {
     return (

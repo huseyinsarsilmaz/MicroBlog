@@ -78,11 +78,21 @@ const Register = () => {
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            InputLabelProps={{ style: { color: "#888" } }}
-            InputProps={{
-              style: {
+            slotProps={{
+              inputLabel: {
+                sx: { color: "#888" },
+              },
+            }}
+            sx={{
+              input: {
                 color: "#fff",
                 backgroundColor: "#333",
+                "&:-webkit-autofill": {
+                  color: "#fff",
+                  backgroundColor: "#333 !important",
+                  transition: "background-color 5000s",
+                  "-webkit-text-fill-color": "#fff !important",
+                },
               },
             }}
           />
@@ -95,11 +105,21 @@ const Register = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            InputLabelProps={{ style: { color: "#888" } }}
-            InputProps={{
-              style: {
+            slotProps={{
+              inputLabel: {
+                sx: { color: "#888" },
+              },
+            }}
+            sx={{
+              input: {
                 color: "#fff",
                 backgroundColor: "#333",
+                "&:-webkit-autofill": {
+                  color: "#fff",
+                  backgroundColor: "#333 !important",
+                  transition: "background-color 5000s",
+                  "-webkit-text-fill-color": "#fff !important",
+                },
               },
             }}
           />
@@ -112,11 +132,21 @@ const Register = () => {
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            InputLabelProps={{ style: { color: "#888" } }}
-            InputProps={{
-              style: {
+            slotProps={{
+              inputLabel: {
+                sx: { color: "#888" },
+              },
+            }}
+            sx={{
+              input: {
                 color: "#fff",
                 backgroundColor: "#333",
+                "&:-webkit-autofill": {
+                  color: "#fff",
+                  backgroundColor: "#333 !important",
+                  transition: "background-color 5000s",
+                  "-webkit-text-fill-color": "#fff !important",
+                },
               },
             }}
           />
